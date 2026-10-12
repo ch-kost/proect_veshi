@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Период владения #{{ period.id }}{% endblock %}
+
+{% block content %}
+  <a class="back-link" href="{% url 'history:list' %}">
+    <span aria-hidden="true">←</span> Все периоды
+  </a>
+  <div class="page-heading">
+    <p class="eyebrow">Запись истории #{{ period.id }}</p>
+    <h1>Период владения</h1>
+    <p>Связь предмета и его владельца в определённый промежуток времени.</p>
+  </div>
+  <section class="panel period-panel" aria-labelledby="period-heading">
+    <div class="section-heading">
+      <h2 id="period-heading">Данные периода</h2>
+      {% include 'history/includes/period_status.html' %}
+    </div>
+    <dl class="definition-grid">
+      <div>
+        <dt>Предмет</dt>
+        <dd>
+          <a href="{% url 'catalogue:detail' period.item.id %}">
+            {{ period.item.name }} <span aria-hidden="true">↗</span>
+          </a>
+        </dd>
+      </div>
+      <div>
+        <dt>Владелец</dt>
+        <dd>
+          <a href="{% url 'owners:detail' period.owner.id %}">
+            {{ period.owner.name }} <span aria-hidden="true">↗</span>
+          </a>
+        </dd>
+      </div>
+      <div>
+        <dt>Начало владения</dt>
+        <dd>{{ period.start_date|date:'d.m.Y' }}</dd>
+      </div>
+      <div>
+        <dt>Окончание владения</dt>
+        <dd>
+          {% if period.end_date %}
+            {{ period.end_date|date:'d.m.Y' }}
+          {% else %}
+            Не завершён
+          {% endif %}
+        </dd>
+      </div>
+      <div>
+        <dt>Продолжительность</dt>
+        <dd>
+          {% if period.is_active %}
+            Период продолжается
+          {% else %}
+            {{ period.duration_days }} дн.
+          {% endif %}
+        </dd>
+      </div>
+      <div>
+        <dt>Статус</dt>
+        <dd>
+          {% if period.is_active %}
+            Предмет у этого владельца сейчас
+          {% else %}
+            Период завершён
+          {% endif %}
+        </dd>
+      </div>
+    </dl>
+  </section>
+  <aside class="info-note">
+    <span class="note-marker" aria-hidden="true">i</span>
+    <p>
+      {% if period.is_active %}
+        Период продолжается. Его продолжительность будет известна после завершения владения.
+      {% else %}
+        Продолжительность завершённого периода рассчитывается между датами начала и окончания.
+      {% endif %}
+    </p>
+  </aside>
+  <a class="button button-secondary" href="{% url 'catalogue:detail' period.item.id %}">
+    Вся история предмета <span aria-hidden="true">→</span>
+  </a>
+{% endblock %}

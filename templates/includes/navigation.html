@@ -1,0 +1,37 @@
+{% load static %}
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="{% url 'homepage:index' %}" aria-label="История владения — главная">
+      <img src="{% static 'homepage/img/logo.svg' %}" alt="" width="40" height="40">
+      <span>
+        История <strong>владения</strong>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Основная навигация">
+      <a
+        href="{% url 'homepage:index' %}"
+        {% if request.resolver_match.namespace == 'homepage' %}class="active" aria-current="page"{% endif %}
+      >
+        Обзор
+      </a>
+      <a
+        href="{% url 'catalogue:list' %}"
+        {% if request.resolver_match.namespace == 'catalogue' %}class="active" aria-current="page"{% endif %}
+      >
+        Предметы
+      </a>
+      <a
+        href="{% url 'owners:list' %}"
+        {% if request.resolver_match.namespace == 'owners' %}class="active" aria-current="page"{% endif %}
+      >
+        Владельцы
+      </a>
+      <a
+        href="{% url 'history:list' %}"
+        {% if request.resolver_match.namespace == 'history' %}class="active" aria-current="page"{% endif %}
+      >
+        История
+      </a>
+    </nav>
+  </div>
+</header>

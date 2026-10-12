@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Владельцы{% endblock %}
+
+{% block content %}
+  <div class="page-heading">
+    <p class="eyebrow">Люди и вещи</p>
+    <h1>Владельцы</h1>
+    <p>Участники реестра и предметы, с которыми связана их история.</p>
+  </div>
+  <div class="results-heading">
+    <h2>Все владельцы</h2>
+    <span class="count-badge">{{ owners|length }}</span>
+  </div>
+  <div class="owner-grid">
+    {% for owner in owners %}
+      <article class="owner-card">
+        <span class="person-avatar" aria-hidden="true">{{ owner.name|first }}</span>
+        <div>
+          <span class="record-id">Владелец #{{ owner.id }}</span>
+          <h3>
+            <a href="{% url 'owners:detail' owner.id %}">{{ owner.name }}</a>
+          </h3>
+          <a class="text-link" href="{% url 'owners:detail' owner.id %}">
+            Предметы и история <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+    {% empty %}
+      <div class="empty-state">
+        <h3>Владельцев пока нет</h3>
+        <p>Добавьте владельцев через консольную версию проекта.</p>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

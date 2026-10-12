@@ -1,48 +1,35 @@
-"""Показ владельцев и связанных с ними предметов."""
+"""Шаблонные страницы владельцев."""
 
 from django.http import Http404, HttpRequest, HttpResponse
-from django.urls import reverse
-from django.utils.html import format_html, format_html_join
+from django.shortcuts import render
 from django.views.decorators.http import require_safe
 
-from homepage.views import page
 from web_data import load_project_data
 
 
 @require_safe
 def owner_list(request: HttpRequest) -> HttpResponse:
-    """Показать список владельцев."""
+    """Показать список существующих владельцев."""
     _, owners, _ = load_project_data()
-    entries = format_html_join(
-        "", '<li><a href="{}">{}</a></li>',
-        (
-            (reverse("owners:detail", args=[owner.id]), owner.name)
-            for owner in owners
-        ),
-    )
-    return HttpResponse(page(
-        "Владельцы", format_html('<h1>Владельцы</h1><ul>{}</ul>', entries)
-    ))
+    return render(request, "owners/owner_list.html", {"owners": owners})
 
 
 @require_safe
 def owner_detail(request: HttpRequest, owner_id: int) -> HttpResponse:
-    """Показать владельца и его периоды владения."""
-    _, owners, periods = load_project_data()
-    owner = next((owner for owner in owners if owner.id == owner_id), None)
+    """Показать текущие предметы владельца и все его периоды."""
+    items, owners, periods = load_project_data()
+    owner = next((entry for entry in owners if entry.id == owner_id), None)
     if owner is None:
         raise Http404("Владелец не найден.")
-    entries = format_html_join(
-        "", '<li><a href="{}">{}</a> — {}</li>',
-        (
-            (reverse("catalogue:detail", args=[period.item.id]),
-             period.item.name, period)
-            for period in periods if period.owner.id == owner_id
-        ),
-    )
-    content = format_html(
-        '<h1>{}</h1><h2>Периоды владения</h2><ul>{}</ul>'
-        '<a href="{}">К владельцам</a>',
-        owner.name, entries, reverse("owners:list"),
-    )
-    return HttpResponse(page(owner.name, content))
+    context = {
+        "owner": owner,
+        "items": [
+            item for item in items
+            if item.current_owner is not None
+            and item.current_owner.id == owner_id
+        ],
+        "periods": [
+            period for period in periods if period.owner.id == owner_id
+        ],
+    }
+    return render(request, "owners/owner_detail.html", context)

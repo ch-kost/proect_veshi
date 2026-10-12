@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Обзор реестра{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Реестр вещей</p>
+      <h1>
+        Вещи меняют владельцев.<br>История остаётся.
+      </h1>
+      <p class="hero-description">Следите за предметами, узнавайте их текущих владельцев и просматривайте все периоды владения.</p>
+      <div class="action-row">
+        <a class="button button-primary" href="{% url 'catalogue:list' %}">
+          Посмотреть предметы <span aria-hidden="true">↗</span>
+        </a>
+        <a class="text-link" href="{% url 'history:list' %}">
+          Открыть историю <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="visual-caption">Одна вещь. Несколько историй.</div>
+      <div class="visual-object">Вещь</div>
+      <div class="visual-track">
+        <span>Владелец 1</span>
+        <i>→</i>
+        <span>Владелец 2</span>
+        <i>→</i>
+        <span class="visual-current">Сейчас</span>
+      </div>
+      <p>От первого владельца до настоящего дня</p>
+    </div>
+  </section>
+
+  <section class="stats-grid" aria-label="Статистика реестра">
+    <a class="stat-card" href="{% url 'catalogue:list' %}">
+      <span class="stat-label">Предметов</span>
+      <strong>{{ stats.items|default:0 }}</strong>
+      <span class="stat-foot">В едином реестре <span aria-hidden="true">↗</span></span>
+    </a>
+    <a class="stat-card" href="{% url 'owners:list' %}">
+      <span class="stat-label">Владельцев</span>
+      <strong>{{ stats.owners|default:0 }}</strong>
+      <span class="stat-foot">Участники истории <span aria-hidden="true">↗</span></span>
+    </a>
+    <a class="stat-card" href="{% url 'history:list' %}">
+      <span class="stat-label">Передач</span>
+      <strong>{{ stats.transfers|default:0 }}</strong>
+      <span class="stat-foot">После первого назначения <span aria-hidden="true">↗</span></span>
+    </a>
+    <div class="stat-card">
+      <span class="stat-label">Без владельца</span>
+      <strong>{{ stats.without_owner|default:0 }}</strong>
+      <span class="stat-foot">Ожидают первого назначения</span>
+    </div>
+  </section>
+
+  <section aria-labelledby="items-heading">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">В центре внимания</p>
+        <h2 id="items-heading">Предметы реестра</h2>
+      </div>
+      <a class="text-link" href="{% url 'catalogue:list' %}">
+        Все предметы <span aria-hidden="true">→</span>
+      </a>
+    </div>
+    <div class="item-grid">
+      {% for item in items %}
+        {% include 'catalogue/includes/item_card.html' %}
+      {% empty %}
+        <div class="empty-state">
+          <h3>Здесь появятся ваши вещи</h3>
+          <p>Добавьте предметы через консольную версию проекта — они появятся в реестре после сохранения.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+  <aside class="info-note">
+    <span class="note-marker" aria-hidden="true">i</span>
+    <p>Веб-реестр предназначен для просмотра. Добавление предметов и передача владения выполняются в консольной версии.</p>
+  </aside>
+{% endblock %}

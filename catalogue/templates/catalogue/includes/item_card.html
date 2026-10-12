@@ -1,0 +1,26 @@
+<article class="item-card">
+  <div class="card-top">
+    <span class="object-symbol" aria-hidden="true">□</span>
+    <span class="record-id">Предмет #{{ item.id }}</span>
+  </div>
+  <h3>
+    <a href="{% url 'catalogue:detail' item.id %}">{{ item.name }}</a>
+  </h3>
+  <p class="card-description">{{ item.description|default:'Описание пока не добавлено.' }}</p>
+  <div class="card-meta">
+    <span class="meta-label">Текущий владелец</span>
+    {% if item.current_owner %}
+      <a class="owner-link" href="{% url 'owners:detail' item.current_owner.id %}">
+        <span class="owner-dot" aria-hidden="true"></span>{{ item.current_owner.name }}
+      </a>
+    {% else %}
+      <span class="muted">Не назначен</span>
+    {% endif %}
+  </div>
+  <div class="card-bottom">
+    <span>Периодов владения: {{ item.history|length }}</span>
+    <a href="{% url 'catalogue:detail' item.id %}" aria-label="Подробнее о предмете {{ item.name }}">
+      Подробнее <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>

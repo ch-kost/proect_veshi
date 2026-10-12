@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Предметы{% endblock %}
+
+{% block content %}
+  <div class="page-heading">
+    <p class="eyebrow">Каталог</p>
+    <h1>Предметы</h1>
+    <p>Найдите вещь и узнайте, кому она принадлежит сейчас.</p>
+  </div>
+  <form class="filter-bar" method="get" action="{% url 'catalogue:list' %}" role="search">
+    <div class="field search-field">
+      <label for="item-search">Поиск по названию</label>
+      <input id="item-search" name="q" type="search" value="{{ q }}" placeholder="Например, велосипед" maxlength="200">
+    </div>
+    <div class="field sort-field">
+      <label for="item-sort">Порядок</label>
+      <select id="item-sort" name="sort">
+        <option value="name" {% if sort == 'name' or not sort %}selected{% endif %}>По названию: А–Я</option>
+        <option value="desc" {% if sort == 'desc' %}selected{% endif %}>По названию: Я–А</option>
+        <option value="id" {% if sort == 'id' %}selected{% endif %}>По номеру</option>
+      </select>
+    </div>
+    <button class="button button-primary" type="submit">Найти</button>
+    {% if q %}
+      <a class="text-link clear-search" href="{% url 'catalogue:list' %}">Сбросить</a>
+    {% endif %}
+  </form>
+  <div class="results-heading">
+    <h2>
+      {% if q %}
+        Результаты поиска
+      {% else %}
+        Все предметы
+      {% endif %}
+    </h2>
+    <span class="count-badge">{{ items|length }}</span>
+  </div>
+  {% if q %}
+    <p class="search-summary">По запросу «{{ q }}»</p>
+  {% endif %}
+  <div class="item-grid">
+    {% for item in items %}
+      {% include 'catalogue/includes/item_card.html' %}
+    {% empty %}
+      <div class="empty-state">
+        <h3>
+          {% if q %}
+            Ничего не найдено
+          {% else %}
+            Реестр пока пуст
+          {% endif %}
+        </h3>
+        <p>
+          {% if q %}
+            Попробуйте другое название или сбросьте поиск.
+          {% else %}
+            Добавьте первый предмет в консольной версии проекта.
+          {% endif %}
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

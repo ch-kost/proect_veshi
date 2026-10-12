@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Реестр временно недоступен{% endblock %}
+
+{% block content %}
+  <section class="error-state">
+    <p class="error-code" aria-hidden="true">503</p>
+    <p class="eyebrow">Временная недоступность</p>
+    <h1>Не удалось открыть реестр</h1>
+    <p>{{ message|default:'Данные временно недоступны. Попробуйте открыть страницу позже.' }}</p>
+    <div class="action-row">
+      <a class="button button-primary" href="{% url 'homepage:index' %}">Вернуться на главную</a>
+    </div>
+  </section>
+{% endblock %}

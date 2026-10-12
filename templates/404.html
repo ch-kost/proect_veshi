@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Страница не найдена{% endblock %}
+
+{% block content %}
+  <section class="error-state">
+    <p class="error-code" aria-hidden="true">404</p>
+    <p class="eyebrow">Страница не найдена</p>
+    <h1>Этой записи здесь нет</h1>
+    <p>
+      Возможно, адрес содержит ошибку или запись отсутствует в реестре.
+      Начните с обзора или списка предметов.
+    </p>
+    <div class="action-row">
+      <a class="button button-primary" href="{% url 'homepage:index' %}">На главную</a>
+      <a class="button button-secondary" href="{% url 'catalogue:list' %}">К предметам</a>
+    </div>
+  </section>
+{% endblock %}
